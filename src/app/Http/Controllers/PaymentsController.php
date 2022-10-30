@@ -8,6 +8,7 @@ use Colors;
 use Helpers;
 use Auth;
 use Mail;
+use Log;
 
 use App\Purchase;
 use App\User;
@@ -262,7 +263,9 @@ class PaymentsController extends Controller
                 $params = array(
                     'cancelUrl'     => $this->getCallbackCancelUrl($paymentGateway),
                     'returnUrl'     => $this->getCallbackReturnUrl($paymentGateway),
+                    'notifyUrl'     => $this->getCallbackNotifyUrl($paymentGateway),
                     'name'          => Settings::getOrgName() . ' - Tickets Purchase',
+                    'transactionId' => 'ev_' . milliseconds() . random_int(0, 99999) , 
                     'description'   => 'Purchase for ' . Settings::getOrgName(),
                     'amount'        => (float)Helpers::formatBasket($basket)->total,
                     'quantity'      => (string)count($basket),
@@ -420,6 +423,18 @@ class PaymentsController extends Controller
      * @param  Request $request
      * @return Redirect
      */
+    public function processNotification(Request $request)
+    {    
+        Log::info(json_encode($request));
+        return response('ja!', 200);      
+    }
+
+
+    /**
+     * Process Callback Payment
+     * @param  Request $request
+     * @return Redirect
+     */
     public function process(Request $request)
     {
         if (!$paymentGateway = $this->checkParams($request->gate, $basket = Session::get(Settings::getOrgName() . '-basket'))) {
@@ -489,30 +504,18 @@ class PaymentsController extends Controller
                 }
                 break;
             case 'quickpay':
-                $gateway = Omnipay::create('Quickpay');
-                $gateway->setMerchant(config('laravel-omnipay.gateways.quickpay.credentials.merchant'));
-                $gateway->setAgreement(config('laravel-omnipay.gateways.quickpay.credentials.agreement'));
-                $gateway->setApikey(config('laravel-omnipay.gateways.quickpay.credentials.apikey'));
-                $gateway->setPrivatekey(config('laravel-omnipay.gateways.quickpay.credentials.privatekey'));
-                //Complete Purchase
-                $gateway->completePurchase($params)->send();
-                $response = $gateway->fetchCheckout($params)->send(); // this is the raw response object
-                // dd($response);
-                $quickpayResponse = $response->getData();
-                if (isset($quickpayResponse['ACK']) &&
-                    $quickpayResponse['ACK'] === 'Success' &&
-                    isset($quickpayResponse['PAYMENTREQUEST_0_TRANSACTIONID'])
-                ) {
-                    //Add Purchase to database
-                    $purchaseParams = [
-                        'user_id'           => Auth::id(),
-                        'type'              => 'Quickpay',
-                        'transaction_id'    => $quickpayResponse['PAYMENTREQUEST_0_TRANSACTIONID'],
-                        'token'             => $quickpayResponse['TOKEN'],
-                        'status'            => $quickpayResponse['ACK'],
-                    ];
-                    $successful = true;
-                }
+
+                $purchaseParams = [
+                    'user_id'           => Auth::id(),
+                    'type'              => 'quickpay',
+                    'transaction_id'    => '',
+                    'token'             => '',
+                    'status'            => 'Pending'
+                ];
+                $purchase = Purchase::create($purchaseParams);
+                $this->processBasket($basket, $purchase->id);
+                // Mail::to(Auth::user())->queue(new EventulaTicketOrderPendingMail(Auth::user(), $purchase, Session::get(Settings::getOrgName() . '-basket') ));
+                return Redirect::to('/payment/pending/' . $purchase->id);
                 break;
         }
         if ($successful) {
@@ -710,6 +713,16 @@ class PaymentsController extends Controller
     private function getCallbackCancelUrl($paymentGateway)
     {
         return $this->getRequestScheme($paymentGateway) . '://' . $_SERVER['HTTP_HOST'] . '/payment/callback?gate=' . $paymentGateway . '&type=cancel';
+    }
+
+    /**
+     * Get Callback notify Url
+     * @param  $paymentGateway
+     * @return String
+     */
+    private function getCallbackNotifyUrl($paymentGateway)
+    {
+        return $this->getRequestScheme($paymentGateway) . '://' . $_SERVER['HTTP_HOST'] . '/payment/notificationcallback?gate=' . $paymentGateway;
     }
 
     /**

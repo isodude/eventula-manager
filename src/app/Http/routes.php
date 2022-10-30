@@ -256,6 +256,8 @@ Route::group(['middleware' => ['installed']], function () {
                 Route::get('/payment/successful/{purchase}', 'PaymentsController@showSuccessful');
                 Route::get('/payment/pending/{purchase}', 'PaymentsController@showPending');
             });
+            Route::get('/payment/notificationcallback', 'PaymentsController@processNotification');
+
 
             /**
              * Seating

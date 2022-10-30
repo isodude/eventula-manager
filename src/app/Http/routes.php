@@ -35,9 +35,9 @@ Route::group(['middleware' => ['installed']], function () {
         Route::group(['middleware' => ['api']], function () {
 
 
-            Route::get('/payment/notificationcallback', 'PaymentsController@processNotification');
+            Route::post('/payment/notificationcallback', 'PaymentsController@processNotification');
 
-            
+
             Route::get('/api/events/', 'Api\Events\EventsController@index');
             Route::get('/api/events/upcoming', 'Api\Events\EventsController@showUpcoming');
             Route::get('/api/events/{event}', 'Api\Events\EventsController@show');

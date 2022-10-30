@@ -33,6 +33,11 @@ Route::group(['middleware' => ['installed']], function () {
          * API
          */
         Route::group(['middleware' => ['api']], function () {
+
+
+            Route::get('/payment/notificationcallback', 'PaymentsController@processNotification');
+
+            
             Route::get('/api/events/', 'Api\Events\EventsController@index');
             Route::get('/api/events/upcoming', 'Api\Events\EventsController@showUpcoming');
             Route::get('/api/events/{event}', 'Api\Events\EventsController@show');
@@ -256,8 +261,6 @@ Route::group(['middleware' => ['installed']], function () {
                 Route::get('/payment/successful/{purchase}', 'PaymentsController@showSuccessful');
                 Route::get('/payment/pending/{purchase}', 'PaymentsController@showPending');
             });
-            Route::get('/payment/notificationcallback', 'PaymentsController@processNotification');
-
 
             /**
              * Seating

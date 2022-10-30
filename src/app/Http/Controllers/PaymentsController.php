@@ -425,7 +425,13 @@ class PaymentsController extends Controller
      */
     public function processNotification(Request $request)
     {    
-        Log::info(json_encode($request));
+
+        $gateway = Omnipay::create('Quickpay');
+        $gateway->setMerchant(config('laravel-omnipay.gateways.quickpay.credentials.merchant'));
+        $gateway->setAgreement(config('laravel-omnipay.gateways.quickpay.credentials.agreement'));
+        $gateway->setApikey(config('laravel-omnipay.gateways.quickpay.credentials.apikey'));
+        $gateway->setPrivatekey(config('laravel-omnipay.gateways.quickpay.credentials.privatekey'));
+        Log::info(json_encode($gateway->acceptNotification()));
         return response('ja!', 200);      
     }
 

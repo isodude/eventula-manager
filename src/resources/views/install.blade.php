@@ -98,6 +98,23 @@
 							{{ Form::label('stripe_secret','Secret Key',array('id'=>'','class'=>'')) }}
 							{{ Form::text('stripe_secret', '',array('id'=>'','class'=>'form-control')) }}
 						</div>
+						<h4>Quickpay</h4>
+				        <div class="form-group">
+							{{ Form::label('quickpay_api','Api Key',array('id'=>'','class'=>'')) }}
+							{{ Form::text('quickpay_api', '',array('id'=>'','class'=>'form-control')) }}
+						</div>
+						<div class="form-group">
+							{{ Form::label('quickpay_merchant','Merchant Id',array('id'=>'','class'=>'')) }}
+							{{ Form::text('quickpay_merchant', '',array('id'=>'','class'=>'form-control')) }}
+						</div>
+						<div class="form-group">
+							{{ Form::label('quickpay_agreement','Agreement Id',array('id'=>'','class'=>'')) }}
+							{{ Form::text('quickpay_agreement', '',array('id'=>'','class'=>'form-control')) }}
+						</div>
+						<div class="form-group">
+							{{ Form::label('quickpay_private','Private Key',array('id'=>'','class'=>'')) }}
+							{{ Form::text('quickpay_private', '',array('id'=>'','class'=>'form-control')) }}
+						</div>
 					</div>
 					<div class="col-12 col-md-6">
 				        <p>You Must supply at least one Payment Gateway API.</p>

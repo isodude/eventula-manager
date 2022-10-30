@@ -107,6 +107,66 @@ class ApiKey extends Model
             return false;
         }
         return true;
+    }	
+
+    /**
+     * Set Quickpay Api Key
+     * @param String $secretKey
+     * @return Boolean
+     */	
+ 	public static function setQuickpayApiKey($apiKey)
+    {
+ 		$key = self::where('key', 'quickpay_api_key')->first();
+        $key->value = $apiKey;
+        if (!$key->save()) {
+            return false;
+        }
+        return true;
+    }    
+    
+    /**
+     * Set Quickpay Merchant ID
+     * @param String $secretKey
+     * @return Boolean
+     */	
+ 	public static function setQuickpayMerchantId($merchantId)
+    {
+ 		$key = self::where('key', 'quickpay_merchant_id')->first();
+        $key->value = $merchantId;
+        if (!$key->save()) {
+            return false;
+        }
+        return true;
+    }    
+
+    /**
+     * Set Quickpay Agreement ID
+     * @param String $secretKey
+     * @return Boolean
+     */	
+ 	public static function setQuickpayAgreementId($agreementId)
+    {
+ 		$key = self::where('key', 'quickpay_agreement_id')->first();
+        $key->value = $agreementId;
+        if (!$key->save()) {
+            return false;
+        }
+        return true;
+    }    
+
+    /**
+     * Set Quickpay Private Key
+     * @param String $secretKey
+     * @return Boolean
+     */	
+ 	public static function setQuickpayPrivateKey($privateKey)
+    {
+ 		$key = self::where('key', 'quickpay_private_key')->first();
+        $key->value = $privateKey;
+        if (!$key->save()) {
+            return false;
+        }
+        return true;
     }
 
     /**

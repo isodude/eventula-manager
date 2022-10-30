@@ -38,7 +38,12 @@ class AppServiceProvider extends ServiceProvider
             @\Config::set('laravel-omnipay.gateways.paypal_express.credentials.signature', env('PAYPAL_SIGNATURE'));
             // Stripe
             @\Config::set('laravel-omnipay.gateways.stripe.credentials.public', env('STRIPE_PUBLIC_KEY'));
-            @\Config::set('laravel-omnipay.gateways.stripe.credentials.secret', env('STRIPE_SECRET_KEY'));
+            @\Config::set('laravel-omnipay.gateways.stripe.credentials.secret', env('STRIPE_SECRET_KEY'));            
+            // Quickpay
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.merchant', env('QUICKPAY_MERCHANT_ID'));
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.agreement', env('QUICKPAY_AGREEMENT_ID'));
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.apikey', env('QUICKPAY_API_KEY'));
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.privatekey', env('QUICKPAY_PRIVATE_KEY'));
             // Facebook
             @\Config::set('services.facebook.client_id', env('FACEBOOK_APP_ID'));
             @\Config::set('facebook.config.app_id', env('FACEBOOK_APP_ID'));
@@ -61,6 +66,11 @@ class AppServiceProvider extends ServiceProvider
             // Stripe
             @\Config::set('laravel-omnipay.gateways.stripe.credentials.public', \App\ApiKey::where('key', 'stripe_public_key')->first()->value);
             @\Config::set('laravel-omnipay.gateways.stripe.credentials.secret', \App\ApiKey::where('key', 'stripe_secret_key')->first()->value);
+            // Quickpay
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.merchant', \App\ApiKey::where('key', 'quickpay_merchant_id')->first()->value );
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.agreement', \App\ApiKey::where('key', 'quickpay_agreement_id')->first()->value );
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.apikey', \App\ApiKey::where('key', 'quickpay_api_key')->first()->value);
+            @\Config::set('laravel-omnipay.gateways.quickpay.credentials.privatekey', \App\ApiKey::where('key', 'quickpay_private_key')->first()->value);
             // Facebook
             @\Config::set('services.facebook.client_id', \App\ApiKey::where('key', 'facebook_app_id')->first()->value);
             @\Config::set('facebook.config.app_id', \App\ApiKey::where('key', 'facebook_app_id')->first()->value);

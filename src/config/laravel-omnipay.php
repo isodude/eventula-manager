@@ -25,12 +25,25 @@ return [
         'stripe' => [
             'driver'  => 'stripe',
             'options' => [
-                'displayName'   => 'Debit/Credit Card',
+                'displayName'   => 'Debit/Credit Card via stripe',
                 'note'          => 'You may be redirected offsite for this payment.',
             ],
             'credentials' => [
                 'public' => env('STRIPE_PUBLIC_KEY'),
                 'secret' => env('STRIPE_SECRET_KEY')
+            ]
+        ],
+        'quickpay' => [
+            'driver'  => 'quickpay',
+            'options' => [
+                'displayName'   => 'Quickpay',
+                'note'          => 'You may be redirected offsite for this payment.',
+            ],
+            'credentials' => [
+                'merchant' => env('QUICKPAY_MERCHANT_ID'),
+                'agreement' => env('QUICKPAY_AGREEMENT_ID'),
+                'privatekey' => env('QUICKPAY_PRIVATE_KEY'),
+                'apikey' => env('QUICKPAY_API_KEY'),
             ]
         ],
         'free' => [

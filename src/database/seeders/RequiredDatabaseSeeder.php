@@ -240,6 +240,13 @@ class RequiredDatabaseSeeder extends Seeder
                 'value'         => true,
                 'default'       => true,
             ]
+        );        
+        Setting::firstOrCreate(
+            ['setting'          => 'payment_gateway_quickpay'],
+            [
+                'value'         => true,
+                'default'       => true,
+            ]
         );
         Setting::firstOrCreate(
             ['setting'          => 'payment_gateway_paypal_express'],
@@ -579,6 +586,35 @@ class RequiredDatabaseSeeder extends Seeder
                 'value'         => env('STRIPE_SECRET_KEY', null),
             ]
         );
+        
+        ApiKey::firstOrCreate(
+            ['key'          => 'quickpay_merchant_id'],
+            [
+                'value'         => env('QUICKPAY_MERCHANT_ID', null),
+            ]
+        );
+
+        ApiKey::firstOrCreate(
+            ['key'          => 'quickpay_agreement_id'],
+            [
+                'value'         => env('QUICKPAY_AGREEMENT_ID', null),
+            ]
+        );
+
+        ApiKey::firstOrCreate(
+            ['key'          => 'quickpay_api_key'],
+            [
+                'value'         => env('QUICKPAY_API_KEY', null),
+            ]
+        );
+
+        ApiKey::firstOrCreate(
+            ['key'          => 'quickpay_private_key'],
+            [
+                'value'         => env('QUICKPAY_PRIVATE_KEY', null),
+            ]
+        );
+
         ApiKey::firstOrCreate(
             ['key'          => 'facebook_app_id'],
             [

@@ -165,6 +165,36 @@ else
 	echo 'OK'
 fi
 
+file_env 'QUICKPAY_API_KEY'
+if [ -z "$QUICKPAY_API_KEY" ];
+then
+	echo 'NOT SET'
+else
+	echo 'OK'
+fi
+
+file_env 'QUICKPAY_MERCHANT_ID'
+if [ -z "$QUICKPAY_MERCHANT_ID" ];
+then
+	echo 'NOT SET'
+else
+	echo 'OK'
+fi
+file_env 'QUICKPAY_AGREEMENT_ID'
+if [ -z "$QUICKPAY_AGREEMENT_ID" ];
+then
+	echo 'NOT SET'
+else
+	echo 'OK'
+fi
+file_env 'QUICKPAY_PRIVATE_KEY'
+if [ -z "$QUICKPAY_PRIVATE_KEY" ];
+then
+	echo 'NOT SET'
+else
+	echo 'OK'
+fi
+
 file_env 'PAYPAL_USERNAME'
 if [ -z "$PAYPAL_USERNAME" ];
 then

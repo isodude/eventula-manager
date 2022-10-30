@@ -238,6 +238,13 @@ class SettingsTableSeeder extends Seeder
             ]
         );
         Setting::firstOrCreate(
+            ['setting'          => 'payment_gateway_quickpay'],
+            [
+                'value'         => true,
+                'default'       => true,
+            ]
+        );
+        Setting::firstOrCreate(
             ['setting'          => 'payment_gateway_free'],
             [
                 'value'         => true,

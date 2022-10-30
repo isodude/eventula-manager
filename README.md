@@ -88,7 +88,8 @@ If you are using this please consider signing up to eventula for event mapping.
 - Payments
   - Terms & Conditions
   - Paypal Express
-  - Stripe Card payments
+  - Stripe payments
+  - Quickpay payments
   - Free payment provider
   - Breakdowns in Admin
 - Voting and Poll Management

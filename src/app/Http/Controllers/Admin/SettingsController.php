@@ -119,6 +119,10 @@ class SettingsController extends Controller
             ->withPaypalSignature(ApiKey::where('key', 'paypal_signature')->first()->value)
             ->withStripePublicKey(ApiKey::where('key', 'stripe_public_key')->first()->value)
             ->withStripeSecretKey(ApiKey::where('key', 'stripe_secret_key')->first()->value)
+	        ->withQuickpayApiKey(ApiKey::where('key', 'quickpay_api_key')->first()->value )
+	        ->withQuickpayMerchantId(ApiKey::where('key', 'quickpay_merchant_id')->first()->value)
+	        ->withQuickpayAgreementId(ApiKey::where('key', 'quickpay_agreement_id')->first()->value)
+	        ->withQuickpayPrivateKey(ApiKey::where('key', 'quickpay_private_key')->first()->value)
             ->withFacebookAppId(ApiKey::where('key', 'facebook_app_id')->first()->value)
             ->withFacebookAppSecret(ApiKey::where('key', 'facebook_app_secret')->first()->value)
             ->withChallongeApiKey(ApiKey::where('key', 'challonge_api_key')->first()->value)
@@ -169,6 +173,23 @@ class SettingsController extends Controller
             Session::flash('alert-danger', 'Could not update!');
             return Redirect::back();
         }
+        if (isset($request->quickpay_api_key) && !ApiKey::setQuickpayApiKey($request->quickpay_api_key)) {
+            Session::flash('alert-danger', 'Could not update!');
+            return Redirect::back();
+        }
+        if (isset($request->quickpay_merchant_id) && !ApiKey::setQuickpayMerchantId($request->quickpay_merchant_id)) {
+            Session::flash('alert-danger', 'Could not update!');
+            return Redirect::back();
+        }
+        if (isset($request->quickpay_agreement_id) && !ApiKey::setQuickpayAgreementId($request->quickpay_agreement_id)) {
+            Session::flash('alert-danger', 'Could not update!');
+            return Redirect::back();
+        }
+        if (isset($request->quickpay_private_key) && !ApiKey::setQuickpayPrivateKey($request->quickpay_private_key)) {
+            Session::flash('alert-danger', 'Could not update!');
+            return Redirect::back();
+        }
+
         Session::flash('alert-success', 'Successfully updated!');
         return Redirect::back();
     }

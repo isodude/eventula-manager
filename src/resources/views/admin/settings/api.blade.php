@@ -162,6 +162,37 @@
 					</div>
 				{{ Form::close() }}
 			</div>
+		</div>		
+		<!-- Quickpay -->
+		<div class="card mb-3">
+			<div class="card-header">
+				<i class="fa fa-wrench fa-fw"></i> Quickpay
+			</div>
+			<div class="card-body">
+				{{ Form::open(array('url'=>'/admin/settings/api', 'onsubmit' => 'return ConfirmSubmit()', 'files' => 'true')) }}
+					<div class="row">
+						<div class="col-12 col-md-6">
+							<div class="form-group">
+								{{ Form::label('quickpay_api_key','Api Key',array('id'=>'','class'=>'')) }}
+								{{ Form::text('quickpay_api_key', $quickpayApiKey, array('id'=>'quickpay_api_key','class'=>'form-control')) }}
+							</div>
+							<div class="form-group">
+								{{ Form::label('quickpay_merchant_id','Merchant Id',array('id'=>'','class'=>'')) }}
+								{{ Form::text('quickpay_merchant_id', $quickpayMerchantId, array('id'=>'quickpay_merchant_id','class'=>'form-control')) }}
+							</div>
+							<div class="form-group">
+								{{ Form::label('quickpay_agreement_id','Agreement Id',array('id'=>'','class'=>'')) }}
+								{{ Form::text('quickpay_agreement_id', $quickpayAgreementId, array('id'=>'quickpay_agreement_id','class'=>'form-control')) }}
+							</div>
+							<div class="form-group">
+								{{ Form::label('quickpay_private_key','Private Key',array('id'=>'','class'=>'')) }}
+								{{ Form::text('quickpay_private_key', $quickpayPrivateKey, array('id'=>'quickpay_private_key','class'=>'form-control')) }}
+							</div>
+							<button type="submit" class="btn btn-success btn-block">Submit</button>
+						</div>
+					</div>
+				{{ Form::close() }}
+			</div>
 		</div>
 	</div>
 </div>

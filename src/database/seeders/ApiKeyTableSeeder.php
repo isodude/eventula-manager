@@ -43,6 +43,22 @@ class ApiKeyTableSeeder extends Seeder
         factory(ApiKey::class)->create([
             'key'          => 'stripe_secret_key',
             'value'         => env('STRIPE_SECRET_KEY', null),
+        ]);        
+        factory(ApiKey::class)->create([
+            'key'          => 'quickpay_merchant_id',
+            'value'         => env('QUICKPAY_MERCHANT_ID', null),
+        ]);        
+        factory(ApiKey::class)->create([
+            'key'          => 'quickpay_agreement_id',
+            'value'         => env('QUICKPAY_AGREEMENT_ID', null),
+        ]);        
+        factory(ApiKey::class)->create([
+            'key'          => 'quickpay_api_key',
+            'value'         => env('QUICKPAY_API_KEY', null),
+        ]);        
+        factory(ApiKey::class)->create([
+            'key'          => 'quickpay_private_key',
+            'value'         => env('QUICKPAY_PRIVATE_KEY', null),
         ]);
         factory(ApiKey::class)->create([
             'key'          => 'facebook_app_id',

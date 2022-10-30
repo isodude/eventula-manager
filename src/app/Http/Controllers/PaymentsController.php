@@ -212,6 +212,7 @@ class PaymentsController extends Controller
         }
         $offSitePaymentGateways = [
             'paypal_express',
+            'quickpay',
             'onsite',
             'free'
         ];
@@ -254,6 +255,24 @@ class PaymentsController extends Controller
                 );
                 $gateway = Omnipay::create('Stripe\PaymentIntents');
                 $gateway->setApiKey(config('laravel-omnipay.gateways.stripe.credentials.secret'));
+                break;
+            case 'quickpay':
+
+                //Quickpay Post Params
+                $params = array(
+                    'cancelUrl'     => $this->getCallbackCancelUrl($paymentGateway),
+                    'returnUrl'     => $this->getCallbackReturnUrl($paymentGateway),
+                    'name'          => Settings::getOrgName() . ' - Tickets Purchase',
+                    'description'   => 'Purchase for ' . Settings::getOrgName(),
+                    'amount'        => (float)Helpers::formatBasket($basket)->total,
+                    'quantity'      => (string)count($basket),
+                    'currency'      => Settings::getCurrency(),
+                );
+                $gateway = Omnipay::create('Quickpay');
+                $gateway->setMerchant(config('laravel-omnipay.gateways.quickpay.credentials.merchant'));
+                $gateway->setAgreement(config('laravel-omnipay.gateways.quickpay.credentials.agreement'));
+                $gateway->setApikey(config('laravel-omnipay.gateways.quickpay.credentials.apikey'));
+                $gateway->setPrivatekey(config('laravel-omnipay.gateways.quickpay.credentials.privatekey'));
                 break;
             case 'paypal_express':
                 //Paypal Post Params
@@ -419,6 +438,7 @@ class PaymentsController extends Controller
             $this->sandbox = true;
         }
         $successful = false;
+        // dd($paymentGateway);
         switch ($paymentGateway) {
             case 'stripe':
                 $gateway = Omnipay::create('Stripe\PaymentIntents');
@@ -464,6 +484,32 @@ class PaymentsController extends Controller
                         'token'             => $paypalResponse['TOKEN'],
                         'status'            => $paypalResponse['ACK'],
                         'paypal_email'      => $paypalResponse['EMAIL'],
+                    ];
+                    $successful = true;
+                }
+                break;
+            case 'quickpay':
+                $gateway = Omnipay::create('Quickpay');
+                $gateway->setMerchant(config('laravel-omnipay.gateways.quickpay.credentials.merchant'));
+                $gateway->setAgreement(config('laravel-omnipay.gateways.quickpay.credentials.agreement'));
+                $gateway->setApikey(config('laravel-omnipay.gateways.quickpay.credentials.apikey'));
+                $gateway->setPrivatekey(config('laravel-omnipay.gateways.quickpay.credentials.privatekey'));
+                //Complete Purchase
+                $gateway->completePurchase($params)->send();
+                $response = $gateway->fetchCheckout($params)->send(); // this is the raw response object
+                // dd($response);
+                $quickpayResponse = $response->getData();
+                if (isset($quickpayResponse['ACK']) &&
+                    $quickpayResponse['ACK'] === 'Success' &&
+                    isset($quickpayResponse['PAYMENTREQUEST_0_TRANSACTIONID'])
+                ) {
+                    //Add Purchase to database
+                    $purchaseParams = [
+                        'user_id'           => Auth::id(),
+                        'type'              => 'Quickpay',
+                        'transaction_id'    => $quickpayResponse['PAYMENTREQUEST_0_TRANSACTIONID'],
+                        'token'             => $quickpayResponse['TOKEN'],
+                        'status'            => $quickpayResponse['ACK'],
                     ];
                     $successful = true;
                 }

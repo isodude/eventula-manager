@@ -48,18 +48,22 @@ class InstallController extends Controller
     public function install(Request $request)
     {
         $rules = [
-            'email'         	=> 'required|filled|email|unique:users,email',
-            'password1'     	=> 'required|same:password2|min:8',
-            'username'      	=> 'required|unique:users,username',
-            'firstname'     	=> 'required|string',
-            'surname'       	=> 'required|string',
-            'org_name'			=> 'filled',
-            'org_tagline'		=> 'filled',
-            'paypal_username'	=> 'required_without:stripe_secret,stripe_public',
-			'paypal_password'	=> 'required_without:stripe_secret,stripe_public',
-			'paypal_signature'	=> 'required_without:stripe_secret,stripe_public',
-			'stripe_public'		=> 'required_without:paypal_signature,paypal_password,paypal_username',
-			'stripe_secret'		=> 'required_without:paypal_signature,paypal_password,paypal_username',
+            'email'         	    => 'required|filled|email|unique:users,email',
+            'password1'     	    => 'required|same:password2|min:8',
+            'username'      	    => 'required|unique:users,username',
+            'firstname'     	    => 'required|string',
+            'surname'       	    => 'required|string',
+            'org_name'			    => 'filled',
+            'org_tagline'		    => 'filled',
+            'paypal_username'	    => 'required_without:stripe_secret,stripe_public,quickpay_api,quickpay_merchant,quickpay_agreement,quickpay_private',
+			'paypal_password'	    => 'required_without:stripe_secret,stripe_public,quickpay_api,quickpay_merchant,quickpay_agreement,quickpay_private',
+			'paypal_signature'	    => 'required_without:stripe_secret,stripe_public,quickpay_api,quickpay_merchant,quickpay_agreement,quickpay_private',
+			'stripe_public'		    => 'required_without:paypal_signature,paypal_password,paypal_username,quickpay_api,quickpay_merchant,quickpay_agreement,quickpay_private',
+			'stripe_secret'		    => 'required_without:paypal_signature,paypal_password,paypal_username,quickpay_api,quickpay_merchant,quickpay_agreement,quickpay_private',
+			'quickpay_api'		    => 'required_without:paypal_signature,paypal_password,paypal_username,stripe_secret,stripe_public',
+			'quickpay_merchant'	    => 'required_without:paypal_signature,paypal_password,paypal_username,stripe_secret,stripe_public',
+			'quickpay_agreement'    => 'required_without:paypal_signature,paypal_password,paypal_username,stripe_secret,stripe_public',
+			'quickpay_private'		=> 'required_without:paypal_signature,paypal_password,paypal_username,stripe_secret,stripe_public',
         ];
         $messages = [
             'username.unique'       				=> 'Username must be unique',
@@ -78,6 +82,10 @@ class InstallController extends Controller
             'paypal_signature.required_without'		=> 'Paypal Signature is required if no other details are entered.',
             'stripe_public.required_without'		=> 'Stripe Public Key is required if no other details are entered.',
             'stripe_secret.required_without'		=> 'Stripe Secret Key is required if no other details are entered.',
+            'quickpay_api.required_without'		    => 'Quickpay Api Key is required if no other details are entered.',
+            'quickpay_merchant.required_without'    => 'Quickpay Merchant ID is required if no other details are entered.',
+            'quickpay_agreement.required_without'   => 'Quickpay Agreement ID is required if no other details are entered.',
+            'quickpay_private.required_without'		=> 'Quickpay Private Key is required if no other details are entered.',
         ];
         $this->validate($request, $rules, $messages);
 
@@ -109,6 +117,14 @@ class InstallController extends Controller
 	        Apikey::setStripePublicKey($request->stripe_public);
 	        Apikey::setStripeSecretKey($request->stripe_secret);
 	        Settings::enablePaymentGateway('stripe');
+        }
+        
+        if ($request->quickpay_api != '' && $request->quickpay_merchant != '' && $request->quickpay_agreement != '' && $request->quickpay_private != '') {
+	        Apikey::setQuickpayApiKey($request->quickpay_api);
+	        Apikey::setQuickpayMerchantId($request->quickpay_merchant);
+	        Apikey::setQuickpayAgreementId($request->quickpay_agreement);
+	        Apikey::setQuickpayPrivateKey($request->quickpay_private);
+	        Settings::enablePaymentGateway('quickpay');
         }
 		Settings::enablePaymentGateway('free');
 		Settings::enablePaymentGateway('onsite');

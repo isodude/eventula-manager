@@ -61,10 +61,13 @@ class Purchase extends Model
     {
         switch (strtolower($this->type)) {
             case 'stripe':
-                return 'Card';
+                return 'Stripe';
                 break;
             case 'paypal express':
                 return 'Paypal';
+                break;            
+            case 'qickpay':
+                return 'Quickpay';
                 break;
             case 'free':
                 return 'free';

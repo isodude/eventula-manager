@@ -8,7 +8,7 @@ use Colors;
 use Helpers;
 use Auth;
 use Mail;
-use Log;
+use Storage;
 
 use App\Purchase;
 use App\User;
@@ -425,7 +425,9 @@ class PaymentsController extends Controller
      */
     public function processNotification(Request $request)
     {    
-        Log::info(json_encode($request->getContent()));
+
+        Storage::append('file.log', json_encode($request->getContent()));
+        Storage::append('file.log', '_________________________________________________________________________________');
 
         // $gateway = Omnipay::create('Quickpay');
         // $gateway->setMerchant(config('laravel-omnipay.gateways.quickpay.credentials.merchant'));

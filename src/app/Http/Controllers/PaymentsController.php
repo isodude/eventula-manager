@@ -265,7 +265,7 @@ class PaymentsController extends Controller
                     'returnUrl'     => $this->getCallbackReturnUrl($paymentGateway),
                     'notifyUrl'     => $this->getCallbackNotifyUrl($paymentGateway),
                     'name'          => Settings::getOrgName() . ' - Tickets Purchase',
-                    'transactionId' => 'ev_' . microtime() . random_int(0, 99999) , 
+                    'transactionId' => 'ev_' . intval(microtime(true)) . random_int(0, 99) , 
                     'description'   => 'Purchase for ' . Settings::getOrgName(),
                     'amount'        => (float)Helpers::formatBasket($basket)->total,
                     'quantity'      => (string)count($basket),

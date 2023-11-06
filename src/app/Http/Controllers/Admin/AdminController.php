@@ -64,14 +64,6 @@ class AdminController extends Controller
             }
             $userLoginMethodCount[$gateway] = $count;
         }
-        $orderBreakdown = array();
-        foreach (ShopOrder::where('created_at', '>=', Carbon::now()->subMonths(12)->month)->get() as $order) {
-            $orderBreakdown[date_format($order->created_at, 'm')][] = $order;
-        }
-        $ticketBreakdown = array();
-        foreach (EventParticipant::where('created_at', '>=', Carbon::now()->subMonths(12)->month)->get() as $participant) {
-            $ticketBreakdown[date_format($participant->created_at, 'm')][] = $participant;
-        }
         return view('admin.index')
             ->withUser($user)
             ->withEvents($events)
@@ -97,7 +89,35 @@ class AdminController extends Controller
             ->withNextEvent(Helpers::getNextEventName())
             ->withTournamentCount($tournamentCount)
             ->withTournamentParticipantCount($tournamentParticipantCount)
-            ->withOrderBreakdown($orderBreakdown)
-            ->withTicketBreakdown($ticketBreakdown);
+            ->withOrderBreakdown(
+                collect(range(1, 12))
+                ->mapWithKeys(function ($month) {
+                    return [Carbon::now()->startOfYear()->addMonthsNoOverflow($month - 1)->format('F') => 0];
+                })
+                ->merge(
+                    ShopOrder::where('created_at', '>=', Carbon::now()->subMonths(12))
+                        ->get()
+                        ->groupBy(function ($order) {
+                            return Carbon::parse($order->created_at)->format('F');
+                        })
+                        ->map->count()
+                )
+                ->all()
+            )
+            ->withTicketBreakdown(
+                collect(range(0, 11))
+                ->mapWithKeys(function ($month) {
+                    return [Carbon::now()->startOfYear()->addMonthsNoOverflow($month)->format('F') => 0];
+                })
+                ->merge(
+                    EventParticipant::where('created_at', '>=', Carbon::now()->subMonths(12))
+                        ->get()
+                        ->groupBy(function ($participant) {
+                            return Carbon::parse($participant->created_at)->format('F');
+                        })
+                        ->map->count()
+                )
+                ->all()   
+        );
     }
 }

@@ -29,7 +29,23 @@ class TicketsController extends Controller
     {
         return view('admin.events.tickets.index')
             ->withEvent($event)
-            ->withUsers(User::all());
+            ->withUsers(User::all())
+            ->withPurchaseBreakdownData(
+                $event->tickets()->withCount('participants')->get()->map(function ($ticket) {
+                    return [
+                        'name' => $ticket->name,
+                        'count' => $ticket->participants_count,
+                    ];
+                })->toArray()
+            )
+            ->withIncomeBreakdownData(
+                $event->tickets()->withCount('participants')->get()->map(function ($ticket) {
+                    return [
+                        'name' => $ticket->name,
+                        'income' => $ticket->price * $ticket->participants_count,
+                    ];
+                })->toArray()
+            );
     }
 
     /**

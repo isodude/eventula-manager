@@ -4,24 +4,19 @@
 	@yield('page_title') | {{ Settings::getOrgName() }} @else {{ Settings::getOrgName() }} Admin @endif </title>
 <link rel="icon" type="image/png" sizes="32x32" href="{{ Settings::getOrgFavicon() }}">
 
-<!-- Admin CSS -->
+		<!-- Admin CSS -->
 		<link href="/css/admin.css" rel="stylesheet">
 		<link href="/css/jquery-ui.min.css" rel="stylesheet">
 
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 				<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 				<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
-<!-- Jquery Core JavaScript -->
+		<!-- Jquery Core JavaScript -->
 		<script src="/js/vendor.js"></script>
-
-		<!-- Morris Charts JavaScript -->
-		<!-- <script src="/js/morris/raphael.min.js"></script>
-		<script src="/js/morris/morris.min.js"></script>
-		<script src="/js/morris/morris-data.js"></script> -->
 
 		<script>
 			function ConfirmDelete()
